@@ -1,35 +1,36 @@
 ---
-name: "zone_create"
-runner_type: "python-script"
-description: "Create a new zone"
-enabled: true
-entry_point: "zone_create.py"
-parameters:
-  name:
-    type: string
-    description: "Subject of the appointment."
-    required: true
-  nameservers:
-    type: array
-    description: "Date/time period to look for appointments."
-    required: true
-  kind:
-    type: string
-    description: "Native."
-    required: true
-  soa:
-    type: string
-    description: "Start of Authority"
-    required: true
-  rr_name:
-    type: string
-    description: "Resource record name"
-    required: true
-  rtype:
-    type: string
-    description: "Resource record type"
-    required: true
-  ttl:
-    type: string
-    description: "Time-To-Live for resource record"
-    required: true
+  name: "zone_create"
+  runner_type: "python-script"
+  description: "Create a new zone"
+  enabled: true
+  entry_point: "zone_create.py"
+  parameters:
+    server:
+      type: string
+      description: PowerDNS server to use
+      default: localhost
+    timeout:
+      type: integer
+      description: Time to wait for response from API.
+      default: 5
+    name:
+      type: string
+      description: Name of zone
+    kind:
+      type: string
+      description: Type of zone
+    nameservers:
+      type: array
+      description: Name servers
+    masters:
+      type: array
+      description: Zone masters
+    servers:
+      type: array
+      description: List of forwarded-to servers (recursor only)
+    rrsets:
+      type: array
+      description: Resource records sets
+    update:
+      type: bool
+      description: If the zone need to be updated or created

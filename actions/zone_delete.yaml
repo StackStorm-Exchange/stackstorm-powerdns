@@ -1,13 +1,13 @@
 ---
-  name: "zone_get"
+  name: "zone_delete"
   runner_type: "python-script"
-  description: "Get a zone by name"
+  description: "Delete a zone by name"
   enabled: true
-  entry_point: "zone_get.py"
+  entry_point: "zone_delete.py"
   parameters:
     name:
       type: string
-      description: "Zone name to fetch."
+      description: "Zone name to delete."
       required: true
     server:
       type: string

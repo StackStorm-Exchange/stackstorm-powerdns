@@ -1,10 +1,10 @@
 from lib.base import PowerDNSClient
 
 
-class ZoneGet(PowerDNSClient):
+class ZoneDetails(PowerDNSClient):
     """
-    Get a zone by name.
+    Get a zone details.
     """
     def run(self, server, name, timeout=5):
         super().run(timeout)
-        return (True, self.zone_get(server, name))
+        return (True, self.zone_details(server, name))

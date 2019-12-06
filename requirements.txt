@@ -1,1 +1,3 @@
--e git+https://github.com/outini/python-powerdns.git#egg=python-powerdns
+git+https://github.com/outini/python-powerdns.git#egg=python-powerdns
+requests
+urllib3
