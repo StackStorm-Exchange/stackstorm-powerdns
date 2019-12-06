@@ -7,4 +7,4 @@ class ZoneDelete(PowerDNSClient):
     """
     def run(self, server, name, timeout=5):
         super().run(timeout)
-        return (True, self.zone_delete(name))
+        return (True, self.zone_delete(server, name))
