@@ -1,1 +1,1 @@
-python-powerdns
+-e git+https://github.com/outini/python-powerdns.git#egg=python-powerdns

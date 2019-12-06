@@ -1,0 +1,21 @@
+---
+name: "zone_get"
+runner_type: "python-script"
+description: "Lists available zones"
+enabled: true
+entry_point: "zone_get.py"
+parameters:
+  response_timeout:
+    type: number
+    description: Time to wait for response to be received.
+    default: 5
+    required: false
+  server_id:
+    type: string
+    description: The id of the server to retrieve.
+    required: true
+    default: localhost
+  zone:
+    type: string
+    description: Zone name to retrieve.
+    required: true
