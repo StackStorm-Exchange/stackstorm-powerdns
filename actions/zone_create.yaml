@@ -5,11 +5,11 @@
   enabled: true
   entry_point: "zone_create.py"
   parameters:
-    server:
+    server_id:
       type: string
       description: PowerDNS server to use
       default: localhost
-    timeout:
+    response_timeout:
       type: integer
       description: Time to wait for response from API.
       default: 5

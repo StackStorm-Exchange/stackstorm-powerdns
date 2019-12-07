@@ -1,4 +1,3 @@
-from st2common.runners.base_action import Action
 from lib.base import PowerDNSClient
 
 
@@ -6,5 +5,6 @@ class ZonesList(PowerDNSClient):
     """
     List zones.
     """
-    def run(self, server, timeout=5):
-        return (True, self.zones_list())
+    def run(self, server_id, response_timeout=5):
+        super().run(response_timeout)
+        return (True, self.zones_list(server_id))

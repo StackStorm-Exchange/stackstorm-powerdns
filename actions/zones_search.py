@@ -5,6 +5,6 @@ class ZonesSearch(PowerDNSClient):
     """
     Search for a term in all zones on the server.
     """
-    def run(self, server, search_term, max_results=50, timeout=5):
-        super().run(timeout)
-        return (True, self.search(server, search_term, max_results))
+    def run(self, server_id, search_term, max_results=50, response_timeout=5):
+        super().run(response_timeout)
+        return (True, self.search(server_id, search_term, max_results))

@@ -14,8 +14,8 @@ LOG = logging.getLogger(__name__)
 class PowerDNSClient(Action):
     def __init__(self, config, timeout=5):
         super().__init__(config)
-        self.api_key = config.api_key
-        self.api_url = config.api_url
+        self.api_key = config.get("api_key")
+        self.api_url = config.get("api_url")
         self.api_client = None
         self.api = None
         self.current_server = None
@@ -31,12 +31,12 @@ class PowerDNSClient(Action):
         self.api = powerdns.PDNSEndpoint(self.api_client)
 
     def servers_list(self):
-        return [str(server) for server in self.api.servers_list()]
+        return [str(server) for server in self.api.servers]
 
-    def select_server(self, server):
-        for s in self.servers_list():
-            if str(s) == server:
-                self.current_server = s
+    def select_server(self, server_id):
+        for server in self.servers_list():
+            if str(server) == server_id:
+                self.current_server = server
                 break
         else:
             raise ValueError("Failed to find server {}".format(server))
@@ -44,17 +44,17 @@ class PowerDNSClient(Action):
     def select_zone(self, name):
         self.current_zone = self.current_server.get_zone(name)
 
-    def zones_list(self, server):
-        self.select_server(server)
+    def zones_list(self, server_id):
+        self.select_server(server_id)
         return [str(zone) for zone in self.current_server.zones()]
 
-    def zone_get(self, server, name):
-        self.select_server(server)
+    def zone_get(self, server_id, name):
+        self.select_server(server_id)
         return self.current_server.get_zone(name)
 
     def zone_create(
         self,
-        server,
+        server_id,
         name,
         kind,
         nameservers,
@@ -63,7 +63,7 @@ class PowerDNSClient(Action):
         rrsets=None,
         update=False
     ):
-        self.select_server(server)
+        self.select_server(server_id)
         return self.current_server.create_zone(
             name,
             kind,
@@ -74,15 +74,15 @@ class PowerDNSClient(Action):
             update
         )
 
-    def zone_delete(self, server, name):
-        self.select_server(server)
+    def zone_delete(self, server_id, name):
+        self.select_server(server_id)
         return self.current_server.delete_zone(name)
 
-    def zones_search(self, server, search_term, max_results):
-        self.select_server(server)
+    def zones_search(self, server_id, search_term, max_results):
+        self.select_server(server_id)
         return self.current_server.search(search_term, max_results)
 
-    def zone_details(self, server, name):
-        self.select_server(server)
+    def zone_details(self, server_id, name):
+        self.select_server(server_id)
         self.select_zone(name)
         self.current_zone.details()

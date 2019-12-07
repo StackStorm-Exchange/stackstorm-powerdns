@@ -1,4 +1,4 @@
-# powerdns integration pack v0.0.1
+# powerdns integration pack v0.0.2
 
 > StackStorm intergratation for the PowerDNS API.
 Carlos <nzlosh@yahoo.com>
@@ -11,7 +11,7 @@ The following options are required to be configured for the pack to work correct
 | Option | Type | Required | Secret | Description |
 |---|---|---|---|---|
 | `api_key` | string | True | True | PowerDNS API Key |
-| `api_url` | string | True | False | PowerDNS API. |
+| `api_url` | string | True | False | URL to PowerDNS API. |
 
 
 ## Actions
@@ -19,19 +19,14 @@ The following options are required to be configured for the pack to work correct
 
 The pack provides the following actions:
 
-### servers_list
-_Lists available PowerDNS servers_
+### zone_get
+_Get a zone by name_
 
 | Parameter | Type | Required | Secret | Description |
 |---|---|---|---|---|
-| `response_timeout` | number | False | default | _Time to wait for response to be received._ |
-### zones_get
-_Lists available zones_
-
-| Parameter | Type | Required | Secret | Description |
-|---|---|---|---|---|
-| `response_timeout` | number | False | default | _Time to wait for response to be received._ |
-| `zone` | string | True | default | _The id of the server to retrieve_ |
+| `name` | string | True | default | _Zone name to fetch._ |
+| `server_id` | string | True | default | _Server name to query._ |
+| `response_timeout` | integer | True | default | _Time to wait for a response from PowerDNS._ |
 ### zones_list
 _Lists available zones_
 
@@ -39,18 +34,51 @@ _Lists available zones_
 |---|---|---|---|---|
 | `response_timeout` | number | False | default | _Time to wait for response to be received._ |
 | `server_id` | string | True | default | _The id of the server to retrieve_ |
+### zone_details
+_Get zone details._
+
+| Parameter | Type | Required | Secret | Description |
+|---|---|---|---|---|
+| `name` | string | True | default | _Zone name to get details._ |
+| `server_id` | string | True | default | _Server name to query._ |
+| `response_timeout` | integer | True | default | _Time to wait for a response from PowerDNS._ |
+### servers_list
+_Lists available PowerDNS servers_
+
+| Parameter | Type | Required | Secret | Description |
+|---|---|---|---|---|
+| `response_timeout` | number | False | default | _Time to wait for response to be received._ |
+### zones_search
+_Search for terms in all zones on the server._
+
+| Parameter | Type | Required | Secret | Description |
+|---|---|---|---|---|
+| `search_term` | string | True | default | _The term to search for._ |
+| `max_results` | string | True | default | _Limit the number of results returned in the search._ |
+| `server_id` | string | True | default | _Server name to query._ |
+| `response_timeout` | integer | True | default | _Time to wait for a response from PowerDNS._ |
+### zone_delete
+_Delete a zone by name_
+
+| Parameter | Type | Required | Secret | Description |
+|---|---|---|---|---|
+| `name` | string | True | default | _Zone name to delete._ |
+| `server_id` | string | True | default | _Server name to query._ |
+| `response_timeout` | integer | True | default | _Time to wait for a response from PowerDNS._ |
 ### zone_create
 _Create a new zone_
 
 | Parameter | Type | Required | Secret | Description |
 |---|---|---|---|---|
-| `name` | string | True | default | _Subject of the appointment._ |
-| `nameservers` | array | True | default | _Date/time period to look for appointments._ |
-| `kind` | string | True | default | _Native._ |
-| `soa` | string | True | default | _Start of Authority_ |
-| `rr_name` | string | True | default | _Resource record name_ |
-| `rtype` | string | True | default | _Resource record type_ |
-| `ttl` | string | True | default | _Time-To-Live for resource record_ |
+| `server_id` | string | default | default | _PowerDNS server to use_ |
+| `response_timeout` | integer | default | default | _Time to wait for response from API._ |
+| `name` | string | default | default | _Name of zone_ |
+| `kind` | string | default | default | _Type of zone_ |
+| `nameservers` | array | default | default | _Name servers_ |
+| `masters` | array | default | default | _Zone masters_ |
+| `servers` | array | default | default | _List of forwarded-to servers (recursor only)_ |
+| `rrsets` | array | default | default | _Resource records sets_ |
+| `update` | boolean | default | default | _If the zone need to be updated or created_ |
 
 
 

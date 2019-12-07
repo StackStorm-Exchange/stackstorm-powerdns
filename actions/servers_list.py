@@ -5,5 +5,6 @@ class ServerList(PowerDNSClient):
     """
     List available PowerDNS servers.
     """
-    def run(self, timeout=5):
+    def run(self, response_timeout=5):
+        super().run(response_timeout)
         return (True, self.servers_list())

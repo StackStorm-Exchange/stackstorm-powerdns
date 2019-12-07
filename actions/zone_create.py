@@ -7,7 +7,7 @@ class ZoneCreate(PowerDNSClient):
     """
     def run(
         self,
-        server,
+        server_id,
         name,
         nameservers,
         kind,
@@ -15,13 +15,13 @@ class ZoneCreate(PowerDNSClient):
         rr_name,
         rtype,
         ttl,
-        timeout=5
+        response_timeout=5
     ):
-        super().run(timeout)
+        super().run(response_timeout)
         return (
             True,
             self.zone_create(
-                server,
+                server_id,
                 name,
                 nameservers,
                 kind,
