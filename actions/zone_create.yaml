@@ -32,5 +32,5 @@
       type: array
       description: Resource records sets
     update:
-      type: bool
+      type: boolean
       description: If the zone need to be updated or created
