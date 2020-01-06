@@ -50,8 +50,10 @@ class PowerDNSClient(Action):
         return [str(zone) for zone in self.current_server.zones()]
 
     def zone_get(self, server_id, name):
-        self.select_server(server_id)
-        return self.current_server.get_zone(name)
+        self.current_server = self.select_server(server_id)
+        # return self.current_server.get_zone(name)
+        return self.api.get_zone(name)
+
 
     def zone_create(
         self,
