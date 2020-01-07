@@ -1,0 +1,21 @@
+---
+  name: "zone_get"
+  runner_type: "python-script"
+  description: "Get a zone by name"
+  enabled: true
+  entry_point: "zone_get.py"
+  parameters:
+    name:
+      type: string
+      description: "Zone name to fetch."
+      required: true
+    server_id:
+      type: string
+      description: "Server name to query."
+      required: true
+      default: localhost
+    response_timeout:
+      type: integer
+      description: "Time to wait for a response from PowerDNS."
+      required: true
+      default: 5
