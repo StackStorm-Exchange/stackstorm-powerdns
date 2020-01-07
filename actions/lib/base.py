@@ -14,16 +14,17 @@ LOG = logging.getLogger(__name__)
 
 class PowerDNSClient(Action):
 
-    def __init(self, config):
+    def __init__(self, config):
         super(PowerDNSClient, self).__init__(config)
-
+        self.api = None
+        
     def setup_api(self):
         # primary function used to talk to powerdns library
 
         #setup api client
         api_client = powerdns.PDNSApiClient(api_endpoint=self.config['api_url'], api_key=self.config['api_key'])
-        api = powerdns.PDNSEndpoint(api_client)
-        return api
+        self.api = powerdns.PDNSEndpoint(api_client)
+        return self.api
 
 
 
@@ -45,10 +46,10 @@ class PowerDNSClient(Action):
     #     )
     #     self.api = powerdns.PDNSEndpoint(self.api_client)
     #     return self.api
-    #
+
     def servers_list(self):
-        api = self.setup_api()
-        server_list = api.servers
+        new_api = self.setup_api()
+        server_list = new_api.servers
         return str(server for server in server_list)
 
     #
