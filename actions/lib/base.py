@@ -63,7 +63,7 @@ class PowerDNSClient(Action):
     # def select_zone(self, name):
     #     self.current_zone = self.current_server.get_zone(name)
     #
-    def zones_list(self, server_id):
+##    def zones_list(self, server_id):
     #     self.select_server(server_id)
     #     return [str(zone) for zone in self.current_server.zones()]
     #
