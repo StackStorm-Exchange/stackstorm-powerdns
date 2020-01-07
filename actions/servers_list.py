@@ -5,6 +5,9 @@ from lib.base import PowerDNSClient
 """
 List available PowerDNS servers.
 """
-def run(self, response_timeout=5):
+
+
+def run(response_timeout):
     client = PowerDNSClient()
-    return True, client.servers_list()
+    result = client.servers_list()
+    return result
