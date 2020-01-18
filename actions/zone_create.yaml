@@ -5,32 +5,27 @@
   enabled: true
   entry_point: "zone_create.py"
   parameters:
-    server_id:
+    server_hostname:
       type: string
-      description: PowerDNS server to use
-      default: localhost
-    response_timeout:
-      type: integer
-      description: Time to wait for response from API.
-      default: 5
+      description: Hostname of the server
+      required: true
+    api_key:
+      type: string
+      description: API Key for Server
+      required: true
     name:
       type: string
       description: Name of zone
+      required: true
     kind:
       type: string
-      description: Type of zone
+      description: Type of zone. (Native, Master, or Slave)
+      required: true
+      enum:
+        - Native
+        - Master
+        - Slave
     nameservers:
       type: array
-      description: Name servers
-    masters:
-      type: array
-      description: Zone masters
-    servers:
-      type: array
-      description: List of forwarded-to servers (recursor only)
-    rrsets:
-      type: array
-      description: Resource records sets
-    update:
-      type: boolean
-      description: If the zone need to be updated or created
+      description: list of nameservers to use
+      required: true

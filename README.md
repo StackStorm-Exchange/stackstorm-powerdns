@@ -1,7 +1,7 @@
-# powerdns integration pack v0.0.2
+# powerdns integration pack v1.4.0
 
-> StackStorm intergratation for the PowerDNS API.
-Carlos <nzlosh@yahoo.com>
+> StackStorm integration for the PowerDNS API.
+KenV <kvedder@amplex.net>
 
 
 ## Configuration
@@ -10,8 +10,7 @@ The following options are required to be configured for the pack to work correct
 
 | Option | Type | Required | Secret | Description |
 |---|---|---|---|---|
-| `api_key` | string | True | True | PowerDNS API Key |
-| `api_url` | string | True | False | URL to PowerDNS API. |
+None
 
 
 ## Actions
@@ -19,66 +18,88 @@ The following options are required to be configured for the pack to work correct
 
 The pack provides the following actions:
 
-### zone_get
-_Get a zone by name_
+### zone_create
+_Create a new zone_
 
 | Parameter | Type | Required | Secret | Description |
 |---|---|---|---|---|
-| `name` | string | True | default | _Zone name to fetch._ |
-| `server_id` | string | True | default | _Server name to query._ |
-| `response_timeout` | integer | True | default | _Time to wait for a response from PowerDNS._ |
+| `server_hostname` | string | True | default | _Hostname of the server_ |
+| `api_key` | string | True | default | _API Key for Server_ |
+| `name` | string | True | default | _Name of zone_ |
+| `kind` | string | True | default | _Type of zone. (Native, Master, or Slave)_ |
+| `nameservers` | array | True | default | _list of nameservers to use_ |
+### record_create
+_Create a new record inside a zone._
+
+| Parameter | Type | Required | Secret | Description |
+|---|---|---|---|---|
+| `server_hostname` | string | True | default | _Server Hostname To Query_ |
+| `api_key` | string | True | default | _API Key for Server_ |
+| `zone` | string | True | default | _Name of zone to add the record to. (Must be canonical with period at the end.)_ |
+| `name` | string | True | default | _Name of the record_ |
+| `rtype` | string | True | default | _Type of record._ |
+| `ttl` | integer | True | default | _Time to live (in seconds)._ |
+| `data` | string | True | default | _The data portion of the record._ |
+| `comments_content` | string | default | default | _Comments.Content Field for the Record_ |
+| `comments_account` | string | default | default | _Comments.account Field for the Record_ |
 ### zones_list
 _Lists available zones_
 
 | Parameter | Type | Required | Secret | Description |
 |---|---|---|---|---|
-| `response_timeout` | number | False | default | _Time to wait for response to be received._ |
-| `server_id` | string | True | default | _The id of the server to retrieve_ |
-### zone_details
-_Get zone details._
+| `server_hostname` | string | True | default | _Server Hostname To Query_ |
+| `api_key` | string | True | default | _API Key for Server_ |
+### zone_get
+_Get a zone's details by name_
 
 | Parameter | Type | Required | Secret | Description |
 |---|---|---|---|---|
-| `name` | string | True | default | _Zone name to get details._ |
-| `server_id` | string | True | default | _Server name to query._ |
+| `name` | string | True | default | _Zone name to fetch. (must be canonical and end in a period.)_ |
+| `server_hostname` | string | True | default | _Server Hostname To Query_ |
+| `api_key` | string | True | default | _API Key for Server_ |
 | `response_timeout` | integer | True | default | _Time to wait for a response from PowerDNS._ |
-### servers_list
-_Lists available PowerDNS servers_
+### record_delete
+_Delete a new record inside a zone._
 
 | Parameter | Type | Required | Secret | Description |
 |---|---|---|---|---|
-| `response_timeout` | number | False | default | _Time to wait for response to be received._ |
-### zones_search
-_Search for terms in all zones on the server._
+| `server_hostname` | string | True | default | _Server Hostname To Query_ |
+| `api_key` | string | True | default | _API Key for Server_ |
+| `zone` | string | True | default | _Name of zone to delete the record from. (Must be canonical with period at the end.)_ |
+| `name` | string | True | default | _Name of the record_ |
+| `rtype` | string | True | default | _Type of record._ |
+### search_pdns
+_Search PowerDNS for matching items in both records and zones._
 
 | Parameter | Type | Required | Secret | Description |
 |---|---|---|---|---|
-| `search_term` | string | True | default | _The term to search for._ |
-| `max_results` | string | True | default | _Limit the number of results returned in the search._ |
-| `server_id` | string | True | default | _Server name to query._ |
-| `response_timeout` | integer | True | default | _Time to wait for a response from PowerDNS._ |
+| `search_term` | string | True | default | _Term to search for. Wildcard * is allowed. Example: *searchterm*_ |
+| `server_hostname` | string | True | default | _Server Hostname To Query_ |
+| `object_type` | string | True | default | _the object type to search for_ |
+| `api_key` | string | True | default | _API Key for Server_ |
+| `max_results` | integer | True | default | _Maximum Number of Results_ |
 ### zone_delete
 _Delete a zone by name_
 
 | Parameter | Type | Required | Secret | Description |
 |---|---|---|---|---|
 | `name` | string | True | default | _Zone name to delete._ |
-| `server_id` | string | True | default | _Server name to query._ |
-| `response_timeout` | integer | True | default | _Time to wait for a response from PowerDNS._ |
-### zone_create
-_Create a new zone_
+| `server_hostname` | string | True | default | _Hostname of the server_ |
+| `api_key` | string | True | default | _API Key for Server_ |
+### record_update
+_Create a new record inside a zone._
 
 | Parameter | Type | Required | Secret | Description |
 |---|---|---|---|---|
-| `server_id` | string | default | default | _PowerDNS server to use_ |
-| `response_timeout` | integer | default | default | _Time to wait for response from API._ |
-| `name` | string | default | default | _Name of zone_ |
-| `kind` | string | default | default | _Type of zone_ |
-| `nameservers` | array | default | default | _Name servers_ |
-| `masters` | array | default | default | _Zone masters_ |
-| `servers` | array | default | default | _List of forwarded-to servers (recursor only)_ |
-| `rrsets` | array | default | default | _Resource records sets_ |
-| `update` | boolean | default | default | _If the zone need to be updated or created_ |
+| `server_hostname` | string | True | default | _Server Hostname To Query_ |
+| `api_key` | string | True | default | _API Key for Server_ |
+| `zone` | string | True | default | _Name of zone to update the record in. (Must be canonical with period at the end.)_ |
+| `name` | string | True | default | _Name of the record. (must already exist)_ |
+| `rtype` | string | True | default | _Type of record._ |
+| `ttl` | integer | True | default | _Time to live (in seconds)._ |
+| `data` | string | True | default | _The data portion of the record._ |
+| `comments_content` | string | default | default | _Comments.Content Field for the Record_ |
+| `comments_account` | string | default | default | _Comments.account Field for the Record_ |
 
 
 
@@ -105,4 +126,4 @@ There are no sensors available for this pack.
 
 ## Thanks to
 
-<sub>Documentation generated using [pack2md](https://github.com/nzlosh/pack2md)</sub>
+<sub>Documentation generated using [pack2md](https://github.com/nzlosh/pack2md)

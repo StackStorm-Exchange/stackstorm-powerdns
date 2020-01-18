@@ -1,0 +1,39 @@
+---
+  name: "record_delete"
+  runner_type: "python-script"
+  description: "Delete a new record inside a zone."
+  enabled: true
+  entry_point: "record_delete.py"
+  parameters:
+    server_hostname:
+      type: string
+      description: Server Hostname To Query
+      required: true
+    api_key:
+      type: string
+      description: API Key for Server
+      required: true
+    zone:
+      type: string
+      description: Name of zone to delete the record from. (Must be canonical with period at the end.)
+      required: true
+    name:
+      type: string
+      description: Name of the record
+      required: true
+    rtype:
+      type: string
+      description: Type of record.
+      required: true
+      enum:
+        - A
+        - AAA
+        - CAA
+        - CNAME
+        - LOC
+        - MX
+        - NS
+        - PTR
+        - SPF
+        - SRV
+        - TXT

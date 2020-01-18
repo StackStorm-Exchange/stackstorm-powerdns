@@ -1,0 +1,56 @@
+---
+  name: "record_update"
+  runner_type: "python-script"
+  description: "Create a new record inside a zone."
+  enabled: true
+  entry_point: "record_update.py"
+  parameters:
+    server_hostname:
+      type: string
+      description: Server Hostname To Query
+      required: true
+    api_key:
+      type: string
+      description: API Key for Server
+      required: true
+    zone:
+      type: string
+      description: Name of zone to update the record in. (Must be canonical with period at the end.)
+      required: true
+    name:
+      type: string
+      description: Name of the record. (must already exist)
+      required: true
+    rtype:
+      type: string
+      description: Type of record.
+      required: true
+      enum:
+        - A
+        - AAA
+        - CAA
+        - CNAME
+        - LOC
+        - MX
+        - NS
+        - PTR
+        - SPF
+        - SRV
+        - TXT
+    ttl:
+      type: integer
+      description: Time to live (in seconds).
+      required: true
+      default: 3600
+    data:
+      type: string
+      description: The data portion of the record.
+      required: true
+    comments_content:
+      type: string
+      description: Comments.Content Field for the Record
+    comments_account:
+      type: string
+      description: Comments.account Field for the Record
+
+

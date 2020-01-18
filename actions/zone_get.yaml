@@ -1,19 +1,22 @@
 ---
   name: "zone_get"
   runner_type: "python-script"
-  description: "Get a zone by name"
+  description: "Get a zone's details by name"
   enabled: true
   entry_point: "zone_get.py"
   parameters:
     name:
       type: string
-      description: "Zone name to fetch."
+      description: "Zone name to fetch. (must be canonical and end in a period.)"
       required: true
-    server_id:
+    server_hostname:
       type: string
-      description: "Server name to query."
+      description: Server Hostname To Query
       required: true
-      default: localhost
+    api_key:
+      type: string
+      description: API Key for Server
+      required: true
     response_timeout:
       type: integer
       description: "Time to wait for a response from PowerDNS."

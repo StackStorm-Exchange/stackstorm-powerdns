@@ -1,0 +1,33 @@
+---
+  name: "search_pdns"
+  runner_type: "python-script"
+  description: "Search PowerDNS for matching items in both records and zones."
+  enabled: true
+  entry_point: "search_pdns.py"
+  parameters:
+    search_term:
+      type: string
+      description: "Term to search for. Wildcard * is allowed. Example: *searchterm*"
+      required: true
+    server_hostname:
+      type: string
+      description: Server Hostname To Query
+      required: true
+    object_type:
+      type: string
+      description: the object type to search for
+      required: true
+      default: all
+      enum:
+        - all
+        - zone
+        - record
+    api_key:
+      type: string
+      description: API Key for Server
+      required: true
+    max_results:
+      type: integer
+      description: "Maximum Number of Results"
+      required: true
+      default: 50

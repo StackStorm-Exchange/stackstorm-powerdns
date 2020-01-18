@@ -5,14 +5,13 @@ description: "Lists available zones"
 enabled: true
 entry_point: "zones_list.py"
 parameters:
-  response_timeout:
-    type: number
-    description: Time to wait for response to be received.
-    default: 5
-    required: false
-  server_id:
+  server_hostname:
     type: string
-    description: The id of the server to retrieve
+    description: Server Hostname To Query
     required: true
-    default: localhost
+  api_key:
+    type: string
+    description: API Key for Server
+    required: true
+
 

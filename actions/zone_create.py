@@ -5,29 +5,6 @@ class ZoneCreate(PowerDNSClient):
     """
     Create a new zone.
     """
-    def run(
-        self,
-        server_id,
-        name,
-        nameservers,
-        kind,
-        soa,
-        rr_name,
-        rtype,
-        ttl,
-        response_timeout=5
-    ):
-        super().run(response_timeout)
-        return (
-            True,
-            self.zone_create(
-                server_id,
-                name,
-                nameservers,
-                kind,
-                soa,
-                rr_name,
-                rtype,
-                ttl
-            )
-        )
+    def run(self, response_timeout, name, kind, nameservers, server_hostname, api_key):
+        result = self.zone_create(server_hostname, api_key, name, kind, nameservers)
+        return result
