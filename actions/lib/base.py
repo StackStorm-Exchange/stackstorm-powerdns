@@ -13,7 +13,7 @@ LOG = logging.getLogger(__name__)
 
 class PowerDNSClient(Action):
     def __init__(self, config, timeout=5):
-        super().__init__(config)
+        super(PowerDNSClient, self).__init__(config)
         self.api_key = config.get("api_key")
         self.api_url = config.get("api_url")
         self.api_client = None
@@ -22,7 +22,7 @@ class PowerDNSClient(Action):
         self.current_zone = None
 
     def run(self, timeout):
-        super().run()
+        super(PowerDNSClient, self).run()
         self.api_client = powerdns.PDNSApiClient(
             api_endpoint=self.api_url,
             api_key=self.api_key,
@@ -52,17 +52,8 @@ class PowerDNSClient(Action):
         self.select_server(server_id)
         return self.current_server.get_zone(name)
 
-    def zone_create(
-        self,
-        server_id,
-        name,
-        kind,
-        nameservers,
-        masters=None,
-        servers=None,
-        rrsets=None,
-        update=False
-    ):
+    def zone_create(self, server_id, name, kind, nameservers, masters=None, servers=None,
+                    rrsets=None, update=False):
         self.select_server(server_id)
         return self.current_server.create_zone(
             name,
