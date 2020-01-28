@@ -1,7 +1,7 @@
 ---
 name: powerdns
 description: StackStorm intergratation for the PowerDNS API.
-version: 0.0.2
+version: 0.0.3
 author: Carlos
 email: nzlosh@yahoo.com
 python_versions:
