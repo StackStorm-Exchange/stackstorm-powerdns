@@ -18,7 +18,7 @@
       description: Name of zone
     kind:
       type: string
-      description: Type of zone
+      description: Type of zone (master, slave, native)
     nameservers:
       type: array
       description: Name servers

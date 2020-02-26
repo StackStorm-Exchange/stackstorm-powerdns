@@ -4,9 +4,7 @@ from st2common.runners.base_action import Action
 import powerdns
 
 
-__all__ = [
-    "PowerDNSClient"
-]
+__all__ = ["PowerDNSClient"]
 
 LOG = logging.getLogger(__name__)
 
@@ -24,17 +22,21 @@ class PowerDNSClient(Action):
     def run(self, timeout):
         super(PowerDNSClient, self).run()
         self.api_client = powerdns.PDNSApiClient(
-            api_endpoint=self.api_url,
-            api_key=self.api_key,
-            timeout=timeout
+            api_endpoint=self.api_url, api_key=self.api_key, timeout=timeout
         )
         self.api = powerdns.PDNSEndpoint(self.api_client)
 
-    def servers_list(self):
-        return [str(server) for server in self.api.servers]
+
+    def servers_list(self, string_list=True):
+        server_list = []
+        for server in self.api.servers:
+            if string_list:
+                server = str(server)
+            server_list.append(server)
+        return server_list
 
     def select_server(self, server_id):
-        for server in self.servers_list():
+        for server in self.servers_list(string_list=False):
             if str(server) == server_id:
                 self.current_server = server
                 break
@@ -46,23 +48,26 @@ class PowerDNSClient(Action):
 
     def zones_list(self, server_id):
         self.select_server(server_id)
-        return [str(zone) for zone in self.current_server.zones()]
+        return [str(zone) for zone in self.current_server.zones]
 
     def zone_get(self, server_id, name):
         self.select_server(server_id)
-        return self.current_server.get_zone(name)
+        return repr(self.current_server.get_zone(name))
 
-    def zone_create(self, server_id, name, kind, nameservers, masters=None, servers=None,
-                    rrsets=None, update=False):
+    def zone_create(
+        self,
+        server_id,
+        name,
+        kind,
+        nameservers,
+        masters=None,
+        servers=None,
+        rrsets=None,
+        update=False,
+    ):
         self.select_server(server_id)
         return self.current_server.create_zone(
-            name,
-            kind,
-            nameservers,
-            masters,
-            servers,
-            rrsets,
-            update
+            name, kind, nameservers, masters, servers, rrsets, update
         )
 
     def zone_delete(self, server_id, name):
