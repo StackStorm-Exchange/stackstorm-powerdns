@@ -64,12 +64,26 @@ There are no sensors available for this pack.
 
  * To be advised.
 
+<pre>
+comment: {"content": "This is a comment", "account": "random_person", "modified_at": 15xxxxxxxx}
+record: {"content": "192.168.3.1", "disabled": false}
+rrset: {
+    "name": "www.pownerdns.local.",
+    "type": "A",
+    "ttl": 84600,
+    "changetype": "REPLACE"
+    "records":[],
+    "comments": []
+}
+</pre>
 
 ## References
 
-  * This pack uses [python-powerdns](https://github.com/outini/python-powerdns) under the hood.
+  * This pack uses [python-powerdns](https://github.com/outini/python-powerdns).
 
 
 ## Thanks to
+  * Denis 'jawa' Pompilio for the python-powerdns project.
+  * The PowerDNS project team.
 
 <sub>Documentation generated using [pack2md](https://github.com/nzlosh/pack2md)</sub>
