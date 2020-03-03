@@ -14,7 +14,7 @@ class Record(object):
     The RREntry object represents a single record.
     """
 
-    def __init__(self, content, disabled=false):
+    def __init__(self, content, disabled=False):
         """
         content (string) - The content of this record
         disabled (boolean) - Whether or not this record is disabled. When unset, the
@@ -26,7 +26,7 @@ class Record(object):
         """
         self.content = content
         self.disabled = disabled
-        self.set_ptr = false
+        self.set_ptr = False
 
 
 class Comment(object):
@@ -115,21 +115,22 @@ class PowerDNSClient(Action):
         else:
             raise ValueError("Failed to find server {}".format(server))
 
-    def select_zone(self, name):
-        self.current_zone = self.current_server.get_zone(name)
+    def select_zone(self, server_id, zone_name):
+        self.select_server(server_id)
+        self.current_zone = self.current_server.get_zone(zone_name)
 
     def zones_list(self, server_id):
         self.select_server(server_id)
         return [str(zone) for zone in self.current_server.zones]
 
-    def zone_get(self, server_id, name):
+    def zone_get(self, server_id, zone_name):
         self.select_server(server_id)
-        return self.current_server.get_zone(name)
+        return self.current_server.get_zone(zone_name)
 
     def zone_create(
         self,
         server_id,
-        name,
+        zone_name,
         kind,
         nameservers,
         masters=None,
@@ -139,36 +140,33 @@ class PowerDNSClient(Action):
     ):
         self.select_server(server_id)
         return self.current_server.create_zone(
-            name, kind, nameservers, masters, servers, rrsets, update
+            zone_name, kind, nameservers, masters, servers, rrsets, update
         )
 
-    def zone_delete(self, server_id, name):
+    def zone_delete(self, server_id, zone_name):
         self.select_server(server_id)
-        return self.current_server.delete_zone(name)
+        return self.current_server.delete_zone(zone_name)
 
     def zones_search(self, server_id, search_term, max_results):
         self.select_server(server_id)
         return self.current_server.search(search_term, max_results)
 
-    def zone_details(self, server_id, name):
-        self.select_server(server_id)
-        self.select_zone(name)
-        return self.current_zone.details()
+    def zone_details(self, server_id, zone_name):
+        self.select_zone(server_id, zone_name)
+        return self.current_zone.details
 
     def records_list(self, server_id, zone_name):
-        self.select_server(server_id)
-        self.select_zone(zone_name)
-        return self.current_zone.records()
+        self.select_zone(server_id, zone_name)
+        return self.current_zone.records
 
     def record_get(self, server_id, zone_name, record_name):
-        self.select_server(server_id)
-        self.select_zone(zone_name)
+        self.select_zone(server_id, zone_name)
         return self.current_zone.get_record(record_name)
 
-    def records_create(self, server_id, zone_name):
-        self.select_server(server_id)
-        self.select_zone(zone_name)
-
-    def records_delete(self, server_id, zone_name):
-        self.select_server(server_id)
-        self.select_zone(zone_name)
+    def records_create(self, server_id, zone_name, rrsets):
+        self.select_zone(server_id, zone_name)
+        raise NotImplementedError
+        
+    def records_delete(self, server_id, zone_name, rrsets):
+        self.select_zone(server_id, zone_name)
+        raise NotImplementedError

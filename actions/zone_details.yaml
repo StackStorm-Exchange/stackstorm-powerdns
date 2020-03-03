@@ -5,7 +5,7 @@
   enabled: true
   entry_point: "zone_details.py"
   parameters:
-    name:
+    zone_name:
       type: string
       description: "Zone name to get details."
       required: true

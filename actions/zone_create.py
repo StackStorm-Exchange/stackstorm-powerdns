@@ -9,7 +9,7 @@ class ZoneCreate(PowerDNSClient):
     def run(
         self,
         server_id,
-        name,
+        zone_name,
         kind,
         nameservers,
         masters=None,
@@ -22,6 +22,6 @@ class ZoneCreate(PowerDNSClient):
         return (
             True,
             self.zone_create(
-                server_id, name, kind, nameservers, masters, servers, rrsets, update,
+                server_id, zone_name, kind, nameservers, masters, servers, rrsets, update,
             ),
         )
