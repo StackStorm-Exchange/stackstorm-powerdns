@@ -123,10 +123,6 @@ class PowerDNSClient(Action):
         self.select_server(server_id)
         return [str(zone) for zone in self.current_server.zones]
 
-    def zone_get(self, server_id, zone_name):
-        self.select_server(server_id)
-        return self.current_server.get_zone(zone_name)
-
     def zone_create(
         self,
         server_id,
@@ -165,7 +161,7 @@ class PowerDNSClient(Action):
 
     def records_create(self, server_id, zone_name, rrsets):
         self.select_zone(server_id, zone_name)
-        raise NotImplementedError
+        return self.current_zone.create_records(rrsets)
         
     def records_delete(self, server_id, zone_name, rrsets):
         self.select_zone(server_id, zone_name)
