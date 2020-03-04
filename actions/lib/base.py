@@ -162,7 +162,7 @@ class PowerDNSClient(Action):
     def records_create(self, server_id, zone_name, rrsets):
         self.select_zone(server_id, zone_name)
         return self.current_zone.create_records(rrsets)
-        
+
     def records_delete(self, server_id, zone_name, rrsets):
         self.select_zone(server_id, zone_name)
         raise NotImplementedError
