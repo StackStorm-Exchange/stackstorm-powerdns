@@ -1,4 +1,4 @@
-from lib.base import PowerDNSClient
+from lib.base import PowerDNSClient, PowerDNSClientError
 
 
 class ZoneDelete(PowerDNSClient):
@@ -8,4 +8,7 @@ class ZoneDelete(PowerDNSClient):
 
     def run(self, server_id, zone_name, response_timeout=5):
         super(ZoneDelete, self).run(response_timeout)
-        return (True, self.zone_delete(server_id, zone_name))
+        try:
+            return (True, self.zone_delete(server_id, zone_name))
+        except PowerDNSClientError as e:
+            return (False, "{}".format(e))

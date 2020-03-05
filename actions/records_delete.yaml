@@ -5,9 +5,13 @@
   enabled: true
   entry_point: "records_delete.py"
   parameters:
-    rrsets:
+    record_name:
       type: string
-      description: "A set of resource records to be created."
+      description: "The name of the resource record to be deleted."
+      required: true
+    record_type:
+      type: string
+      description: "The type of resource records to be deleted. (A, TXT ...)"
       required: true
     zone_name:
       type: string

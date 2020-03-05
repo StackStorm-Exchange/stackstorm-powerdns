@@ -22,13 +22,6 @@ class ZoneCreate(PowerDNSClient):
         return (
             True,
             self.zone_create(
-                server_id,
-                zone_name,
-                kind,
-                nameservers,
-                masters,
-                servers,
-                rrsets,
-                update,
+                server_id, zone_name, kind, nameservers, masters, servers, rrsets, update,
             ),
         )

@@ -1,4 +1,4 @@
-from lib.base import PowerDNSClient
+from lib.base import PowerDNSClient, PowerDNSClientError
 
 
 class RecordGet(PowerDNSClient):
@@ -8,4 +8,7 @@ class RecordGet(PowerDNSClient):
 
     def run(self, server_id, zone_name, record_name, response_timeout=5):
         super(RecordGet, self).run(response_timeout)
-        return (True, self.record_get(server_id, zone_name, record_name))
+        try:
+            return (True, self.record_get(server_id, zone_name, record_name))
+        except PowerDNSClientError as e:
+            return (False, "{}".format(e))
