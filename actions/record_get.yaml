@@ -1,11 +1,15 @@
 ---
-  name: "zone_get"
+  name: "record_get"
   runner_type: "python-script"
-  description: "Get a zone by name"
+  description: "Get record data"
   enabled: true
-  entry_point: "zone_get.py"
+  entry_point: "record_get.py"
   parameters:
-    name:
+    record_name:
+      type: string
+      description: "Record name to be fetched."
+      required: true
+    zone_name:
       type: string
       description: "Zone name to fetch."
       required: true

@@ -5,9 +5,9 @@
   enabled: true
   entry_point: "zone_details.py"
   parameters:
-    name:
+    zone_name:
       type: string
-      description: "Zone name to get details."
+      description: "Zone's canonical name to get details."
       required: true
     server_id:
       type: string

@@ -13,12 +13,12 @@
       type: integer
       description: Time to wait for response from API.
       default: 5
-    name:
+    zone_name:
       type: string
       description: Name of zone
     kind:
       type: string
-      description: Type of zone
+      description: Type of zone (master, slave, native)
     nameservers:
       type: array
       description: Name servers

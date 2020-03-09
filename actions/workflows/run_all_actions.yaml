@@ -1,0 +1,51 @@
+version: 1.0
+
+description: "Run all actions from PowerDNS pack."
+
+tasks:
+  servers_list:
+    action: powerdns.servers_list
+    next:
+      - do:
+        - zone_create
+
+  zone_create:
+    action: powerdns.zone_create
+    input:
+      server_id: localhost
+      response_timeout: 5
+      name: fishnuts.local.
+      kind: master
+    next:
+      - do:
+        - zone_details
+
+  zone_details:
+    action: core.noop
+    next:
+      - do:
+        - zone_get
+
+  zone_get:
+    action: core.noop
+    next:
+      - do:
+        - zones_list
+
+  zones_list:
+    action: core.noop
+    next:
+      - do:
+        - zones_search
+
+  zones_search:
+    action: core.noop
+    next:
+      - do:
+        - zone_delete
+
+  zone_delete:
+    action: powerdns.zone_delete
+    input:
+      name: fishnuts.local.
+      server_id: localhost

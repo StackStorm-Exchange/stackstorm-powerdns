@@ -1,0 +1,22 @@
+---
+name: "powrdns"
+action_ref: "powerdns.records_create"
+description: "Create an A record."
+formats:
+  - "pdns create {{ name }} {{ zone }} [Aa] {{"
+
+ack:
+  enabled: true
+  format: "Submitting request to PowerDNS ..."
+result:
+  format: |
+    {{ execution.result }}
+
+
+# Example uses:
+#~ pdns create mongo-01 pa1.example.com a 192.168.33.3
+#~ pdns create pa1.example.com txt ["this is an entry", "this is another"]
+#~ pdns update pa1.example.com txt {"existing entry", "new entry"}
+#~ pdns append pa1.example.com txt ["another entry", "yet another"]
+#~ pdns append www pa1.example.com 192.168.33.4
+#~ pdns delete www pa1.example.com 192.168.33.4
