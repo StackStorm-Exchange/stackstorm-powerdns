@@ -1,9 +1,10 @@
 ---
-name: "powrdns"
+name: "records_create"
 action_ref: "powerdns.records_create"
 description: "Create an A record."
+enabled: true
 formats:
-  - "pdns create {{ name }} {{ zone }} [Aa] {{"
+  - "pdns create {{ name }} {{ zone }} [Aa] "
 
 ack:
   enabled: true
