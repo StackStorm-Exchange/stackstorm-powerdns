@@ -1,6 +1,10 @@
 version: 1.0
+description: "Run all actions from PowerDNS pack for functional testing."
 
-description: "Run all actions from PowerDNS pack."
+vars:
+  - test_domain: functionaltest.local.
+  - test_record1: www.<% ctx("test_domain") %>
+  - test_record2: mail.<% ctx("test_domain") %>
 
 tasks:
   servers_list:
@@ -14,32 +18,124 @@ tasks:
     input:
       server_id: localhost
       response_timeout: 5
-      name: fishnuts.local.
+      zone_name: <% ctx("test_domain") %>
       kind: master
+      nameservers:
+        - ns1.<% ctx("test_domain") %>
+        - ns2.<% ctx("test_domain") %>
     next:
       - do:
         - zone_details
 
   zone_details:
-    action: core.noop
-    next:
-      - do:
-        - zone_get
-
-  zone_get:
-    action: core.noop
+    action: powerdns.zone_details
+    input:
+      zone_name: <% ctx("test_domain") %>
     next:
       - do:
         - zones_list
 
   zones_list:
-    action: core.noop
+    action: powerdns.zones_list
+    next:
+      - do:
+        - records_create
+
+  records_create:
+    action: powerdns.records_create
+    input:
+      change_type: "REPLACE"
+      record_name: <% ctx("test_record1") %>
+      record_ttl: 3600
+      record_type: A
+      records:
+        - 127.0.0.4
+        - 127.0.0.10
+      zone_name: <% ctx("test_domain") %>
+    next:
+      - do:
+        - records_create_another
+
+  records_create_another:
+    action: powerdns.records_create
+    input:
+      change_type: "REPLACE"
+      record_name: <% ctx("test_record2") %>
+      record_ttl: 3600
+      record_type: A
+      records:
+        - 127.0.0.5
+        - 127.0.0.11
+      zone_name: <% ctx("test_domain") %>
+    next:
+      - do:
+        - records_list
+
+  records_list:
+    action: powerdns.records_list
+    input:
+      zone_name: <% ctx("test_domain") %>
+    next:
+    - do:
+      - record_get
+
+  record_get:
+    action: powerdns.record_get
+    input:
+      record_name: <% ctx("test_record1") %>
+      zone_name: <% ctx("test_domain") %>
+    next:
+      - do:
+        - records_update
+
+  # TODO : Update this action once it's implemented.
+  records_update:
+    action: powerdns.records_update
+    input:
+      change_type: "REPLACE"
+      record_name: <% ctx("test_record1") %>
+      record_ttl: 7200
+      record_type: A
+      records:
+        - 127.0.0.44
+        - 127.0.0.104
+      zone_name: <% ctx("test_domain") %>
+    next:
+      - do:
+        - record_get2
+
+  record_get2:
+    action: powerdns.record_get
+    input:
+      record_name: <% ctx("test_record2") %>
+      zone_name: <% ctx("test_domain") %>
+    next:
+      - do:
+        - records_delete
+
+  records_delete:
+    action: powerdns.records_delete
+    input:
+      record_name: <% ctx("test_record2") %>
+      record_type: A
+      zone_name: <% ctx("test_domain") %>
+    next:
+      - do:
+        - records_list2
+
+  records_list2:
+    action: powerdns.records_list
+    input:
+      zone_name: <% ctx("test_domain") %>
     next:
       - do:
         - zones_search
 
   zones_search:
-    action: core.noop
+    action: powerdns.zones_search
+    input:
+      search_term: "*functionaltest*"
+      max_results: 5
     next:
       - do:
         - zone_delete
@@ -47,5 +143,5 @@ tasks:
   zone_delete:
     action: powerdns.zone_delete
     input:
-      name: fishnuts.local.
+      zone_name: <% ctx("test_domain") %>
       server_id: localhost
