@@ -1,8 +1,8 @@
 # coding=utf-8
 from st2common import log as logging
 from st2common.runners.base_action import Action
+from powerdns.exceptions import PDNSCanonicalError, PDNSError
 import powerdns
-
 
 __all__ = ["PowerDNSClient"]
 
@@ -15,88 +15,63 @@ class PowerDNSClientError(Exception):
 
 
 class PowerDNSClient(Action):
-    def __init__(self, config, timeout=5):
+    def __init__(self, config, timeout):
         super(PowerDNSClient, self).__init__(config)
+        self.timeout = timeout
         self.api_key = config.get("api_key")
         self.api_url = config.get("api_url")
-        self.api_client = None
-        self.api = None
-        self.current_server = None
-        self.current_zone = None
 
-    def run(self, timeout):
-        super(PowerDNSClient, self).run()
+        self._init_powerdns()
+
+    def _init_powerdns(self):
         self.api_client = powerdns.PDNSApiClient(
-            api_endpoint=self.api_url, api_key=self.api_key, timeout=timeout
+            api_endpoint=self.api_url,
+            api_key=self.api_key,
+            timeout=self.timeout
         )
-        self.api = powerdns.PDNSEndpoint(self.api_client)
+        self._api = powerdns.PDNSEndpoint(self.api_client)
 
-    def servers_list(self, string_list=True):
-        server_list = []
-        for server in self.api.servers:
-            if string_list:
-                server = str(server)
-            server_list.append(server)
-        return server_list
+    def _run(self, *args, **kwargs):
+        raise NotImplementedError
 
-    def select_server(self, server_id):
-        for server in self.servers_list(string_list=False):
+    def _select_server_id(self, server_id):
+        for server in self._api.servers:
             if str(server) == server_id:
-                self.current_server = server
-                break
-        else:
-            raise PowerDNSClientError("Failed to find server {}".format(server))
+                self.api = server
+                return
+        raise PowerDNSClientError("Server not found")
 
-    def select_zone(self, server_id, zone_name):
-        self.select_server(server_id)
-        self.current_zone = self.current_server.get_zone(zone_name)
-        if self.current_zone is None:
-            raise PowerDNSClientError("Failed to find zone {}".format(zone_name))
+    def _select_zone(self, zone_name):
+        self.api = self.api.get_zone(zone_name)
+        if not self.api:
+            raise PowerDNSClientError("Zone not found")
 
-    def zones_list(self, server_id):
-        self.select_server(server_id)
-        return [str(zone) for zone in self.current_server.zones]
+    def run(self, server_id, *args, **kwargs):
 
-    def zone_create(
-        self,
-        server_id,
-        zone_name,
-        kind,
-        nameservers,
-        masters=None,
-        servers=None,
-        rrsets=None,
-        update=False,
-    ):
-        self.select_server(server_id)
-        return self.current_server.create_zone(
-            zone_name, kind, nameservers, masters, servers, rrsets, update
-        )
+        # remove server_id from args
+        try:
+            args = list(args)
+            args.pop(args.index(server_id))
+        except ValueError:
+            pass
 
-    def zone_delete(self, server_id, zone_name):
-        self.select_server(server_id)
-        return self.current_server.delete_zone(zone_name)
+        rrset = {}
+        _cpy = kwargs.copy()
 
-    def zones_search(self, server_id, search_term, max_results):
-        self.select_server(server_id)
-        return self.current_server.search(search_term, max_results)
+        for arg, value in _cpy.items():
+            if arg.startswith("record_"):
+                rrset[arg.split("_")[1]] = value
+                kwargs.pop(arg)
 
-    def zone_details(self, server_id, zone_name):
-        self.select_zone(server_id, zone_name)
-        return self.current_zone.details
+        if rrset:
+            kwargs["rrsets"] = [powerdns.interface.RRSet(**rrset)]
 
-    def records_list(self, server_id, zone_name):
-        self.select_zone(server_id, zone_name)
-        return self.current_zone.records
+        try:
+            self._select_server_id(server_id)
 
-    def record_get(self, server_id, zone_name, record_name):
-        self.select_zone(server_id, zone_name)
-        return self.current_zone.get_record(record_name)
+            if "zone_name" in kwargs:
+                self._select_zone(kwargs.pop("zone_name"))
 
-    def records_create(self, server_id, zone_name, rrsets):
-        self.select_zone(server_id, zone_name)
-        return self.current_zone.create_records(rrsets)
-
-    def records_delete(self, server_id, zone_name, rrsets):
-        self.select_zone(server_id, zone_name)
-        return self.current_zone.delete_records(rrsets)
+            return (True, self._run(*args, **kwargs))
+        except (PowerDNSClientError, PDNSError, PDNSCanonicalError) as e:
+            return (False, e)
