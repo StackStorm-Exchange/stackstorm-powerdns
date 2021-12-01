@@ -84,6 +84,16 @@ class Template:
             default="localhost"
         )
 
+    @staticmethod
+    def add_timeout():
+        return Parameters(
+            name="timeout",
+            type_="number",
+            description="timeout",
+            default=5,
+            required=False
+        )
+
     @property
     def class_name(self):
         return self.name.title().replace("_", "")
