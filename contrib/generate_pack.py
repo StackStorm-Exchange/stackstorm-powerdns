@@ -87,9 +87,9 @@ class Template:
     @staticmethod
     def add_timeout():
         return Parameters(
-            name="timeout",
+            name="response_timeout",
             type_="number",
-            description="timeout",
+            description="Time to wait for a response from PowerDNS",
             default=5,
             required=False
         )
@@ -223,6 +223,7 @@ class Property(Template):
 
     def to_py(self):
         return f"""from lib.base import PowerDNSClient
+
 
 class {self.class_name}(PowerDNSClient):
     def _run(self):

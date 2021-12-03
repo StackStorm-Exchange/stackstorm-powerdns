@@ -1,0 +1,20 @@
+---
+name: get_details
+runner_type: python-script
+description: Get zone’s detailed data
+entry_point: get_details.py
+parameters:
+  zone_name:
+    type: string
+    description: Zone's canonical name to get details.
+    required: true
+  response_timeout:
+    type: number
+    description: Time to wait for a response from PowerDNS
+    required: false
+    default: 5
+  server_id:
+    type: string
+    description: Server name to query.
+    required: true
+    default: localhost

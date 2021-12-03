@@ -1,0 +1,45 @@
+---
+name: delete_records
+runner_type: python-script
+description: Delete resource record sets
+entry_point: delete_records.py
+parameters:
+  rrset_comments:
+    type: array
+    description: list of Comments instances for this RRSet
+    required: true
+  rrset_ttl:
+    type: number
+    description: Record time to live
+    required: true
+  rrset_records:
+    type: array
+    description: List of Str or Tuple(content_str, disabled_bool) or Dict with the
+      keys “content” and optionally “disabled”.
+    required: true
+  rrset_rtype:
+    type: string
+    description: Record type
+    required: true
+  rrset_name:
+    type: string
+    description: Record name
+    required: true
+  rrset_changetype:
+    type: string
+    description: API keyword DELETE or REPLACE
+    required: true
+  response_timeout:
+    type: number
+    description: Time to wait for a response from PowerDNS
+    required: false
+    default: 5
+  server_id:
+    type: string
+    description: Server name to query.
+    required: true
+    default: localhost
+  zone_name:
+    type: string
+    description: Zone's canonical name to get details.
+    required: true

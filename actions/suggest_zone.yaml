@@ -1,0 +1,20 @@
+---
+name: suggest_zone
+runner_type: python-script
+description: Suggest best matching zone from existing zone
+entry_point: suggest_zone.py
+parameters:
+  r_name:
+    type: string
+    description: r_name
+    required: true
+  response_timeout:
+    type: number
+    description: Time to wait for a response from PowerDNS
+    required: false
+    default: 5
+  server_id:
+    type: string
+    description: Server name to query.
+    required: true
+    default: localhost

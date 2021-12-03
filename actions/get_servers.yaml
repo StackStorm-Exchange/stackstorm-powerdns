@@ -1,0 +1,16 @@
+---
+name: get_servers
+runner_type: python-script
+description: List PowerDNS servers
+entry_point: get_servers.py
+parameters:
+  response_timeout:
+    type: number
+    description: Time to wait for a response from PowerDNS
+    required: false
+    default: 5
+  server_id:
+    type: string
+    description: Server name to query.
+    required: true
+    default: localhost
