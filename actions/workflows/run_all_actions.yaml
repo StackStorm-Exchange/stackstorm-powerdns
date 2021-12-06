@@ -7,141 +7,171 @@ vars:
   - test_record2: mail.<% ctx("test_domain") %>
 
 tasks:
-  servers_list:
-    action: powerdns.servers_list
+  get_servers:
+    action: powerdns.get_servers
     next:
       - do:
-        - zone_create
+        - get_config
 
-  zone_create:
-    action: powerdns.zone_create
+  get_config:
+    action: powerdns.get_config
+    next:
+      - do:
+        - create_zone
+
+  create_zone:
+    action: powerdns.create_zone
     input:
       server_id: localhost
-      response_timeout: 5
-      zone_name: <% ctx("test_domain") %>
+      name: <% ctx("test_domain") %>
       kind: master
       nameservers:
         - ns1.<% ctx("test_domain") %>
         - ns2.<% ctx("test_domain") %>
     next:
       - do:
-        - zone_details
+        - notify
 
-  zone_details:
-    action: powerdns.zone_details
+  notify:
+    action: powerdns.notify
     input:
       zone_name: <% ctx("test_domain") %>
     next:
       - do:
-        - zones_list
+        - get_zone
 
-  zones_list:
-    action: powerdns.zones_list
+  get_zone:
+    action: powerdns.get_zone
+    input:
+      name: <% ctx("test_domain") %>
     next:
       - do:
-        - records_create
+        - get_zones
 
-  records_create:
-    action: powerdns.records_create
+  get_zones:
+    action: powerdns.get_zones
+    next:
+      - do:
+        - get_details
+
+  get_details:
+    action: powerdns.get_details
     input:
-      change_type: "REPLACE"
+      zone_name: <% ctx("test_domain") %>
+    next:
+      - do:
+        - suggest_zone
+
+  suggest_zone:
+    action: powerdns.suggest_zone
+    input:
+      r_name: a.b.<% ctx("test_domain") %>
+    next:
+      - do:
+        - create_records
+
+  create_records:
+    action: powerdns.create_records
+    input:
+      record_changetype: "REPLACE"
       record_name: <% ctx("test_record1") %>
       record_ttl: 3600
-      record_type: A
-      records:
+      record_rtype: A
+      record_records:
         - 127.0.0.4
         - 127.0.0.10
       zone_name: <% ctx("test_domain") %>
     next:
       - do:
-        - records_create_another
+        - create_another_records
 
-  records_create_another:
-    action: powerdns.records_create
+  create_another_records:
+    action: powerdns.create_records
     input:
-      change_type: "REPLACE"
+      record_changetype: "REPLACE"
       record_name: <% ctx("test_record2") %>
       record_ttl: 3600
-      record_type: A
-      records:
+      record_rtype: A
+      record_records:
         - 127.0.0.5
         - 127.0.0.11
       zone_name: <% ctx("test_domain") %>
     next:
       - do:
-        - records_list
+        - get_records
 
-  records_list:
-    action: powerdns.records_list
+  get_records:
+    action: powerdns.get_records
     input:
       zone_name: <% ctx("test_domain") %>
     next:
     - do:
-      - record_get
+      - get_record
 
-  record_get:
-    action: powerdns.record_get
+  get_record:
+    action: powerdns.get_record
     input:
-      record_name: <% ctx("test_record1") %>
+      name: <% ctx("test_record1") %>
       zone_name: <% ctx("test_domain") %>
     next:
       - do:
-        - records_update
+        - update_records
 
-  # TODO : Update this action once it's implemented.
-  records_update:
-    action: powerdns.records_update
+  update_records:
+    action: powerdns.create_records
     input:
-      change_type: "REPLACE"
+      record_changetype: "REPLACE"
       record_name: <% ctx("test_record1") %>
       record_ttl: 7200
-      record_type: A
-      records:
+      record_rtype: A
+      record_records:
         - 127.0.0.44
         - 127.0.0.104
       zone_name: <% ctx("test_domain") %>
     next:
       - do:
-        - record_get2
+        - get_record_2
 
-  record_get2:
-    action: powerdns.record_get
+  get_record_2:
+    action: powerdns.get_record
+    input:
+      name: <% ctx("test_record2") %>
+      zone_name: <% ctx("test_domain") %>
+    next:
+      - do:
+        - delete_records
+
+  delete_records:
+    action: powerdns.delete_records
     input:
       record_name: <% ctx("test_record2") %>
+      record_records:
+        - 127.0.0.5
+      record_rtype: A
       zone_name: <% ctx("test_domain") %>
     next:
       - do:
-        - records_delete
+        - get_records2
 
-  records_delete:
-    action: powerdns.records_delete
-    input:
-      record_name: <% ctx("test_record2") %>
-      record_type: A
-      zone_name: <% ctx("test_domain") %>
-    next:
-      - do:
-        - records_list2
-
-  records_list2:
-    action: powerdns.records_list
+  get_records2:
+    action: powerdns.get_records
     input:
       zone_name: <% ctx("test_domain") %>
     next:
       - do:
-        - zones_search
+        - search
 
-  zones_search:
-    action: powerdns.zones_search
+  search:
+    action: powerdns.search
     input:
       search_term: "*functionaltest*"
-      max_results: 5
+      max_result: 5
     next:
       - do:
-        - zone_delete
+        - delete_zone
 
-  zone_delete:
-    action: powerdns.zone_delete
+  delete_zone:
+    action: powerdns.delete_zone
     input:
-      zone_name: <% ctx("test_domain") %>
+      name: <% ctx("test_domain") %>
       server_id: localhost

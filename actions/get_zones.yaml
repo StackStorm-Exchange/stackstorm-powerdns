@@ -1,0 +1,16 @@
+---
+name: get_zones
+runner_type: python-script
+description: List of DNS zones on a PowerDNS server
+entry_point: get_zones.py
+parameters:
+  response_timeout:
+    type: number
+    description: Time to wait for a response from PowerDNS
+    required: false
+    default: 5
+  server_id:
+    type: string
+    description: Server name to query.
+    required: true
+    default: localhost

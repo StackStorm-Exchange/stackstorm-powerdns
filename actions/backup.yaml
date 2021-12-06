@@ -1,0 +1,32 @@
+---
+name: backup
+runner_type: python-script
+description: Backup zone data to json file
+entry_point: backup.py
+parameters:
+  pretty_json:
+    type: boolean
+    description: Enable pretty json display
+    required: false
+  filename:
+    type: string
+    description: Json file name
+    required: false
+  directory:
+    type: string
+    description: Directory to store json file
+    required: true
+  zone_name:
+    type: string
+    description: Zone's canonical name to get details.
+    required: true
+  response_timeout:
+    type: number
+    description: Time to wait for a response from PowerDNS
+    required: false
+    default: 5
+  server_id:
+    type: string
+    description: Server name to query.
+    required: true
+    default: localhost

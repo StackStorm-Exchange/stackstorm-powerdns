@@ -1,0 +1,20 @@
+---
+name: restore_zone
+runner_type: python-script
+description: Restore a zone from a json file produced by PDNSZone.backup()
+entry_point: restore_zone.py
+parameters:
+  json_file:
+    type: string
+    description: json_file
+    required: true
+  response_timeout:
+    type: number
+    description: Time to wait for a response from PowerDNS
+    required: false
+    default: 5
+  server_id:
+    type: string
+    description: Server name to query.
+    required: true
+    default: localhost
