@@ -238,6 +238,7 @@ Usage: python <path to powerdns doc> <path to stackstorm action dir>
 
 Example: python generate_pack.py /home/lisa/work/python-powerdns/docs/html/interface.html /home/lisa/work/stackstorm-powerdns/actions/
 """)
+        sys.exit()
 
     with open(sys.argv[1]) as handle:
         html_documentation = handle.read()
