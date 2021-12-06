@@ -236,13 +236,13 @@ if __name__ == "__main__":
         print("""
 Usage: python <path to powerdns doc> <path to stackstorm action dir>
 
-Example: python generate_pack.py /home/lisa/work/python-powerdns/docs/html/interface.html /home/lisa/work/stackstorm-powerdns/actions/
+Example:
+python generate_pack.py ~/python-powerdns/docs/html/interface.html ~/stackstorm-powerdns/actions/
 """)
         sys.exit()
 
     with open(sys.argv[1]) as handle:
         html_documentation = handle.read()
-
 
     action_path = sys.argv[2]
     parsed_documentation = bs4.BeautifulSoup(html_documentation, 'html.parser')
