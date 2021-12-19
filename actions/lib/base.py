@@ -63,11 +63,11 @@ class PowerDNSClient(Action):
         _cpy = kwargs.copy()
 
         for arg, value in _cpy.items():
-            if arg.startswith("record_"):
+            if arg.startswith("rrset_"):
                 rrset[arg.split("_")[1]] = value
                 kwargs.pop(arg)
 
-        if rrset:
+        if rrset and any(rrset.values()):
             kwargs["rrsets"] = [powerdns.interface.RRSet(**rrset)]
 
         try:

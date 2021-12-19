@@ -73,11 +73,11 @@ tasks:
   create_records:
     action: powerdns.create_records
     input:
-      record_changetype: "REPLACE"
-      record_name: <% ctx("test_record1") %>
-      record_ttl: 3600
-      record_rtype: A
-      record_records:
+      rrset_changetype: "REPLACE"
+      rrset_name: <% ctx("test_record1") %>
+      rrset_ttl: 3600
+      rrset_rtype: A
+      rrset_records:
         - 127.0.0.4
         - 127.0.0.10
       zone_name: <% ctx("test_domain") %>
@@ -88,11 +88,11 @@ tasks:
   create_another_records:
     action: powerdns.create_records
     input:
-      record_changetype: "REPLACE"
-      record_name: <% ctx("test_record2") %>
-      record_ttl: 3600
-      record_rtype: A
-      record_records:
+      rrset_changetype: "REPLACE"
+      rrset_name: <% ctx("test_record2") %>
+      rrset_ttl: 3600
+      rrset_rtype: A
+      rrset_records:
         - 127.0.0.5
         - 127.0.0.11
       zone_name: <% ctx("test_domain") %>
@@ -120,11 +120,11 @@ tasks:
   update_records:
     action: powerdns.create_records
     input:
-      record_changetype: "REPLACE"
-      record_name: <% ctx("test_record1") %>
-      record_ttl: 7200
-      record_rtype: A
-      record_records:
+      rrset_changetype: "REPLACE"
+      rrset_name: <% ctx("test_record1") %>
+      rrset_ttl: 7200
+      rrset_rtype: A
+      rrset_records:
         - 127.0.0.44
         - 127.0.0.104
       zone_name: <% ctx("test_domain") %>
@@ -144,10 +144,10 @@ tasks:
   delete_records:
     action: powerdns.delete_records
     input:
-      record_name: <% ctx("test_record2") %>
-      record_records:
+      rrset_name: <% ctx("test_record2") %>
+      rrset_records:
         - 127.0.0.5
-      record_rtype: A
+      rrset_rtype: A
       zone_name: <% ctx("test_domain") %>
     next:
       - do:
