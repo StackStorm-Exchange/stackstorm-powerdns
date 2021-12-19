@@ -170,18 +170,22 @@ class Method(Template):
 
     def _parse_params(self, parameters, params_default_values):
         add_rrset = False
+        require_rrset = True
+
         for parameter in parameters:
             parameter_name = parameter.find("strong").text
-
-            if parameter_name == "rrsets":
-                add_rrset = True
-                continue
-
             required = True
+
             for item in params_default_values:
                 if item.find("span", {"class": "n"}).text == parameter_name \
                         and item.find("span", {"class": "o"}):
                     required = False
+                    if parameter_name == "rrsets":
+                        require_rrset = False
+
+            if parameter_name == "rrsets":
+                add_rrset = True
+                continue
 
             try:
                 description = parameter.find("p").text.split("–")[-1].strip().replace("\n", " ")
@@ -198,6 +202,9 @@ class Method(Template):
             )
 
         if add_rrset:
+            for param in rrset_params:
+                if not require_rrset:
+                    param.required = require_rrset
             self.parameters += rrset_params
 
     def parse(self):
