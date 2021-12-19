@@ -50,7 +50,7 @@ class PowerDNSClient(Action):
             del kwargs["response_timeout"]
         except KeyError:
             pass
-    
+
         self._init_powerdns()
 
         # remove server_id from args
