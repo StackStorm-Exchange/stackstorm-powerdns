@@ -1,7 +1,30 @@
-# {{ pack["pack.yaml"].name }} integration pack v{{ pack["pack.yaml"].version }}
+# {{ pack["pack.yaml"].name }} integration pack
 
 > {{ pack["pack.yaml"].description }}
-{{ pack["pack.yaml"].author }} <{{ pack["pack.yaml"].email }}>
+
+## Action Generation
+
+Actions are generated from the python module code.  It may be necessary to update the actions as
+the module evolves.  To perform an upgrade you'll need to setup the generation environment.  If the
+changes are significantly different, the generator code will need to be fixed/updated.
+
+Clone the powerdns pack and python module to your development environment
+```
+    git clone https://github.com/StackStorm-Exchange/stackstorm-powerdns
+    git clone https://github.com/outini/python-powerdns
+```
+
+Setup a virtualenv and install the build dependencies
+```
+    virtualenv -p python3 generate-powerdns
+    source generate-powerdns/bin/activate
+    pip install -r stackstorm-powerdns/contrib/generate_pack.py
+```
+
+Run the generator to generate the actions
+```
+    python3 stackstorm-powerdns/contrib/generate_pack.py python-powerdns/docs/html/interface.html stackstorm-powerdns/actions/
+```
 
 
 ## Configuration
@@ -74,3 +97,4 @@ There are no sensors available for this pack.
   * The PowerDNS project team.
 
 <sub>Documentation generated using [pack2md](https://github.com/nzlosh/pack2md)</sub>
+
