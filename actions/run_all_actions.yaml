@@ -1,0 +1,7 @@
+---
+  name: "run_all_actions"
+  runner_type: "orquesta"
+  description: "Run all actions in this pack."
+  enabled: true
+  entry_point: "workflows/run_all_actions.yaml"
+  parameters: {}
