@@ -15,13 +15,11 @@ class PowerDNSClientError(Exception):
 
 
 class PowerDNSClient(Action):
-    def __init__(self, config, timeout):
+    def __init__(self, config, timeout=5):
         super(PowerDNSClient, self).__init__(config)
         self.timeout = timeout
         self.api_key = config.get("api_key")
         self.api_url = config.get("api_url")
-
-        self._init_powerdns()
 
     def _init_powerdns(self):
         self.api_client = powerdns.PDNSApiClient(
@@ -47,6 +45,13 @@ class PowerDNSClient(Action):
             raise PowerDNSClientError("Zone not found")
 
     def run(self, server_id, *args, **kwargs):
+        try:
+            self.timeout = kwargs.get("response_timeout")
+            del kwargs["response_timeout"]
+        except KeyError:
+            pass
+    
+        self._init_powerdns()
 
         # remove server_id from args
         try:
@@ -54,7 +59,6 @@ class PowerDNSClient(Action):
             args.pop(args.index(server_id))
         except ValueError:
             pass
-
         rrset = {}
         _cpy = kwargs.copy()
 
