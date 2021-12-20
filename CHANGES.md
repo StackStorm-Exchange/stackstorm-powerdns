@@ -5,6 +5,14 @@
 ### Changed
 ### Deleted
 
+## [2.0.2] 19 Dec 2021
+### Added
+### Changed
+  - Generated code to return lists for  zones_list and servers_list actions.
+  - Regenerated pack actions.
+  
+### Deleted
+
 ## [2.0.1] 19 Dec 2021
 ### Changed
   - Fixed `timeout` keyword being passed to underlying module.

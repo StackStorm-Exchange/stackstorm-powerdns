@@ -11,15 +11,10 @@ yaml.explicit_start = True
 ALLOWED_CLASSES = [
     "powerdns.interface.PDNSServer",
     "powerdns.interface.PDNSZone",
-    "powerdns.interface.PDNSEndpoint"
+    "powerdns.interface.PDNSEndpoint",
 ]
 
-TYPE_MAPPING_YAML = {
-    "str": "string",
-    "list": "array",
-    "bool": "boolean",
-    "int": "number"
-}
+TYPE_MAPPING_YAML = {"str": "string", "list": "array", "bool": "boolean", "int": "number"}
 
 
 class Parameters:
@@ -71,7 +66,7 @@ class Template:
             name="zone_name",
             type_="string",
             description="Zone's canonical name to get details.",
-            required=True
+            required=True,
         )
 
     @staticmethod
@@ -81,7 +76,7 @@ class Template:
             type_="string",
             description="Server name to query.",
             required=True,
-            default="localhost"
+            default="localhost",
         )
 
     @staticmethod
@@ -91,7 +86,7 @@ class Template:
             type_="number",
             description="Time to wait for a response from PowerDNS",
             default=5,
-            required=False
+            required=False,
         )
 
     @property
@@ -104,7 +99,7 @@ class Template:
             "runner_type": "python-script",
             "description": self.description,
             "entry_point": f"{self.script_name or self.name}.py",
-            "parameters": dict(ChainMap(*map(lambda x: x.parameters, self.parameters)))
+            "parameters": dict(ChainMap(*map(lambda x: x.parameters, self.parameters))),
         }
         with open(self.action_path / Path(f"{self.script_name or self.name}.yaml"), "w") as fp:
             yaml.dump(content, fp)
@@ -138,8 +133,9 @@ class Class(Template):
             parameter_name = "rrset_" + parameter.find("strong").text
             required = True
             for item in params_default_values:
-                if item.find("span", {"class": "n"}).text == parameter_name \
-                        and item.find("span", {"class": "o"}):
+                if item.find("span", {"class": "n"}).text == parameter_name and item.find(
+                    "span", {"class": "o"}
+                ):
                     required = False
             try:
                 description = parameter.find("p").text.split("–")[-1].strip().replace("\n", " ")
@@ -151,7 +147,7 @@ class Class(Template):
                     name=parameter_name,
                     type_=parameter.find("em").text,
                     description=description,
-                    required=required
+                    required=required,
                 )
             )
 
@@ -177,8 +173,9 @@ class Method(Template):
             required = True
 
             for item in params_default_values:
-                if item.find("span", {"class": "n"}).text == parameter_name \
-                        and item.find("span", {"class": "o"}):
+                if item.find("span", {"class": "n"}).text == parameter_name and item.find(
+                    "span", {"class": "o"}
+                ):
                     required = False
                     if parameter_name == "rrsets":
                         require_rrset = False
@@ -197,7 +194,7 @@ class Method(Template):
                     name=parameter_name,
                     type_=parameter.find("em").text,
                     description=description,
-                    required=required
+                    required=required,
                 )
             )
 
@@ -214,9 +211,10 @@ class Method(Template):
 
         try:
             # if only one param, it's not li but p
-            parameters = self.content.find("dl", {"class": "field-list simple"}).find_all("li") \
-                or self.content.find("dd", {"class": "field-odd"}).find_all("p")
-        except AttributeError:   # there is no args at all
+            parameters = self.content.find("dl", {"class": "field-list simple"}).find_all(
+                "li"
+            ) or self.content.find("dd", {"class": "field-odd"}).find_all("p")
+        except AttributeError:  # there is no args at all
             parameters = []
 
         self._parse_params(parameters, params_default_values)
@@ -229,30 +227,41 @@ class Property(Template):
         self.script_name = f"get_{self.name}"
 
     def to_py(self):
-        return f"""from lib.base import PowerDNSClient
+        pytext = f"""from lib.base import PowerDNSClient
 
 
 class {self.class_name}(PowerDNSClient):
     def _run(self):
-        return self.{self.call}.{self.name}
 """
+
+        # iterate and cast items to strings for some api calls.
+        if self.name in ["zones", "servers"]:
+            single = self.name[:-1]
+            pytext += (
+                f"        return [str({single}) for {single} in self.{self.call}.{self.name}]\n"
+            )
+        else:
+            pytext += f"        return self.{self.call}.{self.name}\n"
+        return pytext
 
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
-        print("""
+        print(
+            """
 Usage: python <path to powerdns doc> <path to stackstorm action dir>
 
 Example:
 python generate_pack.py ~/python-powerdns/docs/html/interface.html ~/stackstorm-powerdns/actions/
-""")
+"""
+        )
         sys.exit()
 
     with open(sys.argv[1]) as handle:
         html_documentation = handle.read()
 
     action_path = sys.argv[2]
-    parsed_documentation = bs4.BeautifulSoup(html_documentation, 'html.parser')
+    parsed_documentation = bs4.BeautifulSoup(html_documentation, "html.parser")
     all_cls = parsed_documentation.find_all("dl", {"class": "py class"})
 
     # We need to retrieive first all parameters for RRSets so we can later add it to each action
