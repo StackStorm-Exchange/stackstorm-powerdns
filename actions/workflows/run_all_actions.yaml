@@ -158,9 +158,9 @@ tasks:
         - 127.0.0.11
       zone_name: <% ctx("test_domain") %>
       rrset_comments:
-        - - "Some comment"
-          - "pdns_user"
-          - 1
+        - content: "Some comment"
+          account: "pdns_user"
+          modified_at: 1
     next:
       - do:
         - get_record_2
