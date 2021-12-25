@@ -130,6 +130,48 @@ tasks:
       zone_name: <% ctx("test_domain") %>
     next:
       - do:
+        - update_records_with_disabled
+
+  update_records_with_disabled:
+    action: powerdns.create_records
+    input:
+      rrset_changetype: "REPLACE"
+      rrset_name: <% ctx("test_record1") %>
+      rrset_ttl: 7200
+      rrset_rtype: A
+      rrset_records:
+        - - 127.0.0.11
+          - true
+      zone_name: <% ctx("test_domain") %>
+    next:
+      - do:
+        - update_records_with_comment
+
+  update_records_with_comment:
+    action: powerdns.create_records
+    input:
+      rrset_changetype: "REPLACE"
+      rrset_name: <% ctx("test_record1") %>
+      rrset_ttl: 7200
+      rrset_rtype: A
+      rrset_records:
+        - 127.0.0.11
+      zone_name: <% ctx("test_domain") %>
+      rrset_comments:
+        - content: "Some comment"
+          account: "pdns_user"
+          modified_at: 1
+    next:
+      - do:
+        - get_record_disabled_and_comments
+
+  get_record_disabled_and_comments:
+    action: powerdns.get_record
+    input:
+      name: <% ctx("test_record1") %>
+      zone_name: <% ctx("test_domain") %>
+    next:
+      - do:
         - get_record_2
 
   get_record_2:
