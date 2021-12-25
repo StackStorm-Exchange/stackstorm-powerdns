@@ -163,6 +163,15 @@ tasks:
           modified_at: 1
     next:
       - do:
+        - get_record_disabled_and_comments
+
+  get_record_disabled_and_comments:
+    action: powerdns.get_record
+    input:
+      name: <% ctx("test_record1") %>
+      zone_name: <% ctx("test_domain") %>
+    next:
+      - do:
         - get_record_2
 
   get_record_2:
